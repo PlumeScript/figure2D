@@ -1,0 +1,12 @@
+plumeVersion: b66 (Raven Edition)
+name: figure2D
+author: Erwan Barbedor
+description: Generating classic geometric shapes
+version: 0.1.0
+source: github.com/PlumeScript/figure2D
+required: do
+	html: do
+		version: ^0.3.x
+		source: github.com/PlumeScript/html
+	end
+end
