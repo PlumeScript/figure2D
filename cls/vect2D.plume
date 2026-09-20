@@ -1,0 +1,205 @@
+// This file is part of figure2D
+
+// Copyright © Erwan Barbedor
+// Licensed under the MIT License — see LICENSE for details.
+
+macro getType(x)
+	$ type(x) == "table" and x.type? or type(x)
+end
+
+ref precision: $ 10^-10
+
+macro clamp(x)
+	if (x>0 and x<precision) or (x<0 and x>-precision)
+		return 0
+	end
+	return $x
+end
+
+ref Vect2D: do
+	meta call: macro(...args)
+		if len(args) == 1 and type(args[1]) == "table"
+			if args[1].type? == "Vect2D"
+				return $args[1]
+			end
+			raise Cannot build a Vect2D from a plain table. Splat it: Vect2D(...table)
+		end
+
+		return do
+			type: Vect2D
+			if args.a? or args.r? or args.polar?
+				// `+0` is a cheap `Number` type test
+				let r = $ clamp(args.r? or args[1]? or 0) + 0
+				let a = $ clamp(args.a? or args[2]? or 0) + 0
+				
+				if args.deg?
+					set a *= $ Math.pi / 180
+				end
+
+				x: $ clamp(r * Math.cos(a)) + 0
+				y: $ clamp(r * Math.sin(a)) + 0
+			else
+				x: $ clamp(args.x? or args[1]? or 0) + 0
+				y: $ clamp(args.y? or args[2]? or 0) + 0
+			end
+
+			norm: macro()
+				$ (self.x^2 + self.y^2)^0.5
+			end
+
+			normalize: macro()
+				if self.x == 0 and self.y == 0
+					raise Cannot normalize a null Vect2D.
+				end
+				$ Vect2D(self.x, self.y) / self.norm()
+			end
+
+			normal: macro()
+				$ Vect2D(- self.y, self.x).normalize()
+			end
+
+			distance: macro(Vect2D x)
+				$ (self - x).norm()
+			end
+
+			angle: macro(?deg, ?oriented, ...args)
+				let result = if len(args) > 1
+					raise Too many arguments
+				elseif len(args) == 1
+					let t = $ getType(args[1])
+					if t == "Vect2D"
+						$ self.angle() - args[1].angle()
+					else
+						raise Cannot compute angle between a Vect2D and a "$t".
+					end
+				else
+					$ Math.atan2(self.y, self.x)
+				end
+
+				while oriented and result < 0
+					set result += $ 2 * Math.pi
+				end
+
+				while result > 2 * Math.pi
+					set result -= $ 2 * Math.pi
+				end
+
+				if deg
+					set result *= $ 180 / Math.pi
+				end
+
+				return $result
+			end
+
+			rotate: macro(Number angle, Vect2D center: $Table(), ?deg)
+				if deg
+					set angle *= $ Math.pi / 180
+				end
+
+				let result = $ self
+				set result -= $center
+				set result = $ Vect2D(result.norm(), result.angle() + angle, ?polar)
+				set result += $center
+
+				return $result
+			end
+
+			proj: macro(Vect2D x)
+				let angle = $ self.angle(x)
+				let norm  = $ self.norm() * Math.cos(angle)
+				return $ x.normalize() * norm
+			end
+
+			reflect: macro(Vect2D x)
+				let  p = $ self.proj(x)
+				$ 2 * p - self
+			end
+
+			meta tostring: macro()
+				Vect2D($self.x, $self.y)
+			end
+
+			meta add: macro(u, v)
+				if u != self
+					set u, v = ($v, $u)
+				end
+
+				let tv = $ getType(v) 
+
+				if tv == "Vect2D"
+					return $ Vect2D(u.x + v.x, u.y + v.y)
+				else
+					raise Cannot add a non Vect2D "$tv" object.
+				end
+			end
+
+			meta sub: macro(Vect2D u, Vect2D v)
+				return $ u + -1 * v
+			end
+
+			meta minus: macro()
+				$ -1 * self
+			end
+			
+			
+			// dot-product
+			meta mul: macro(u, v)
+				if u != self
+					set u, v = ($v, $u)
+				end
+
+				let tv = $ getType(v) 
+
+				if tv == "Vect2D"
+					return $ u.x * v.x + u.y * v.y
+				else
+					return $ Vect2D(u.x * v, u.y * v)
+				end
+			end
+
+			// det
+			meta mod: macro(u, v)
+				if u != self
+					set u, v = ($v, $u)
+				end
+
+				let tv = $ getType(v) 
+
+				if tv == "Vect2D"
+					return $ u.x * v.y - u.y * v.x
+				else
+					raise Cannot compute det with a non Vect2D "$tv" object.
+				end
+			end
+
+			meta div: macro(u, v)
+				let tv = $ getType(v)
+
+				if tv == "Vect2D"
+					raise Cannot divide by a Vect2D.
+				elseif tv == "number" or tv == "string" and v.isdigit()
+					return $ u * (1/v)
+				else
+					raise Cannot divide by a non Vect2D "$tv" object.
+				end
+			end
+
+			meta eq: macro(u, v)
+				if type(u) != "table" or type(v) != "table" or u.type? != "Vect2D" or v.type? != "Vect2D"
+					return $false
+				end
+				return $ clamp(u.x - v.x) == 0 and clamp(u.y - v.y) == 0
+			end
+		end
+	end
+	meta validate: macro(x)
+		if type(x) != "table"
+			raise Cannot convert `$type($x)` "$repr($x)" to `Vect2D`.
+		end
+		if x.type? == "Vect2D"
+			return $x
+		end
+
+		return $Vect2D(...x)
+	end
+end
