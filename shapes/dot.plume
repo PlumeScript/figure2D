@@ -53,10 +53,10 @@ Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), ?cross, ?deg)
 		// Magic values
 		deco: macro(pos, style:)
 			set pos += $ textOffset(angle, style)
-			minX: $ pos.x
+			minX: $ pos.x - 1 * 20
 			maxX: $ pos.x + len(label) * 20
-			minY: $ pos.y
-			maxY: $ pos.y + 1 * 20
+			minY: $ pos.y - 1 * 20
+			maxY: $ pos.y + 3 * 20
 		end
 		definition: do
 			- $pos
