@@ -9,28 +9,9 @@ let Vect2D  from $import(../cls/Vect2D)
 let context = $import(../context)
 
 Shape: macro(render:, definition:, box:)
-	render: macro(cx, cy, scale, p)
+	render: macro(cx, cy, scale, style)
 		@render
-			style: do
-				stroke: do
-					strokeWidth: $context.strokeWidth()
-					stroke: $context.stroke()
-					strokeLinecap: $context.strokeLinecap()
-					vectorEffect: $context.vectorEffect()
-				end
-				font: do
-					fontSize: calc($context.fontSize() / $p)
-					fontFamily: $context.fontFamily()
-					textAnchor: $context.textAnchor()
-					dominantBaseline: $context.dominantBaseline()
-				end
-				text: do
-					offset: $ context.textOffset() / p
-				end
-				dot: do
-					length: $ context.dotLength() / p
-				end
-			end
+			style: $style
 			for dot in definition
 				let x = $dot.x
 				let y = $dot.y

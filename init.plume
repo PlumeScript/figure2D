@@ -3,6 +3,8 @@
 // Copyright © Erwan Barbedor
 // Licensed under the MIT License — see LICENSE for details.
 
+use #rawNumbers
+
 let Vect2D  from $import(./cls/Vect2D)
 
 for file in os.Path("./shapes").getChildren()
@@ -55,6 +57,27 @@ Canva2D: macro(Number width: 100, Number height: 100, ...elems)
 		end
 		let p = $ min(width, height) / (100 + 2*margin)
 
+		let style = do
+			stroke: do
+				strokeWidth: $context.strokeWidth()
+				stroke: $context.stroke()
+				strokeLinecap: $context.strokeLinecap()
+				vectorEffect: $context.vectorEffect()
+			end
+			font: do
+				fontSize: calc($context.fontSize() / $p)
+				fontFamily: $context.fontFamily()
+				textAnchor: $context.textAnchor()
+				dominantBaseline: $context.dominantBaseline()
+			end
+			text: do
+				offset: $ context.textOffset() / p
+			end
+			dot: do
+				length: $ context.dotLength() / p
+			end
+		end
+
 		<svg\s
 			viewBox="$(-margin) $(-margin) $(100+2*margin) $(100+2*margin)"\s
 			xmlns="http\:\//www.w3.org/2000/svg"
@@ -62,7 +85,7 @@ Canva2D: macro(Number width: 100, Number height: 100, ...elems)
 			height="$height"\s
 		>
 			for elem in elems
-				$ elem.render((minX+maxX)/2, (minY+maxY)/2, scale, p)
+				$ elem.render((minX+maxX)/2, (minY+maxY)/2, scale, style)
 			end
 		
 		</svg>
