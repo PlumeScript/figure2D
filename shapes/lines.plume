@@ -31,6 +31,27 @@ Line: macro(Vect2D u, Vect2D v)
 	end
 end
 
+HalfLine: macro(Vect2D u, Vect2D v)
+	if u == v
+		raise `u` and `v` must be differents.
+	end
+
+	@Shape
+		render: macro(u, v, style:)
+			// Should compute intersection with border
+			let rv = $ u + (v-u).normalize()*2000
+			 @SvgPath(...style.stroke)
+				M $u.x $u.y\s
+				L $rv.x $rv.y
+			end
+		end
+		definition: do
+			- $u
+			- $v
+		end
+	end
+end
+
 Segment: macro(Vect2D u, Vect2D v)
 	if u == v
 		raise `u` and `v` must be differents.
