@@ -1,0 +1,43 @@
+// This file is part of figure2D
+
+// Copyright © Erwan Barbedor
+// Licensed under the MIT License — see LICENSE for details.
+
+use #rawNumbers
+
+let Vect2D  from $import(../cls/Vect2D)
+let Shape   from $import(../cls/shape)
+let SvgPath from $import(../utils)
+
+Circle: macro(Vect2D center, Vect2D dot, fill:)
+	if center == dot
+		raise `center` and `dot` must be differents.
+	end
+	let r = $ center.distance(dot)
+
+	@Shape
+		render: macro(center, dot, style:)
+			let r = $ center.distance(dot)
+			let dotp = $ 2 * center - dot
+			@SvgPath(...style.stroke)
+				fill: $ fill or "#0000"
+				- do
+					M $dot.x $dot.y\s
+					A $r $r 0 1 0 $dotp.x $dotp.y\s
+					A $r $r 0 1 0 $dot.x $dot.y\s
+					Z
+				end
+			end
+		end
+		definition: do
+			- $center
+			- $dot
+		end
+		box: do
+			minX: $ center.x - r
+			minY: $ center.y - r
+			maxX: $ center.x + r
+			maxY: $ center.y + r
+		end
+	end
+end
