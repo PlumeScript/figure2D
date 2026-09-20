@@ -1,0 +1,8 @@
+// This file is part of figure2D
+
+// Copyright © Erwan Barbedor
+// Licensed under the MIT License — see LICENSE for details.
+
+strokeWidth: $Context(0.2em)
+stroke: $Context(black)
+strokeLinecap: $Context(round)

@@ -15,10 +15,10 @@ Line: macro(Vect2D u, Vect2D v)
 	end
 
 	@Shape
-		render: macro(u, v)
+		render: macro(u, v, style:)
 			let ru = $ u + (v-u)*100
 			let rv = $ u - (v-u)*100
-			 @SvgPath(stroke: black, strokeWidth: 0.02em)
+			 @SvgPath(...style.stroke)
 				M $ru.x $ru.y\s
 				L $rv.x $rv.y
 			end
@@ -36,8 +36,8 @@ Segment: macro(Vect2D u, Vect2D v)
 	end
 
 	@Shape
-		render: macro(u, v)
-			 @SvgPath(stroke: black, strokeWidth: 0.02em)
+		render: macro(u, v, style:)
+			 @SvgPath(stroke: black, ...style.stroke)
 				M $u.x $u.y\s
 				L $v.x $v.y
 			end

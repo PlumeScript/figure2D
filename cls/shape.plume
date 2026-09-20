@@ -4,10 +4,18 @@
 // Licensed under the MIT License — see LICENSE for details.
 
 let Vect2D  from $import(../cls/Vect2D)
+let context = $import(../context)
 
 Shape: macro(render:, definition:, box:, center:)
 	render: macro(minX, minY, scale)
 		@render
+			style: do
+				stroke: do
+					strokeWidth: calc($context.strokeWidth() * $scale)
+					stroke: $context.stroke()
+					strokeLinecap: $context.strokeLinecap()
+				end
+			end
 			for dot in definition
 				let x = $dot.x
 				let y = $dot.y
