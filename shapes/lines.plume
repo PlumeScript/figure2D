@@ -59,7 +59,7 @@ Segment: macro(Vect2D u, Vect2D v)
 
 	@Shape
 		render: macro(u, v, style:)
-			 @SvgPath(stroke: black, ...style.stroke)
+			 @SvgPath(...style.stroke)
 				M $u.x $u.y\s
 				L $v.x $v.y
 			end
