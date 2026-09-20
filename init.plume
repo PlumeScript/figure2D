@@ -81,8 +81,8 @@ Canva2D: macro(Number width: 100, Number height: 100, ...elems)
 		let box = do
 			minX: $ -margin
 			minY: $ -margin
-			maxX: $ 100+2*margin
-			maxY: $ 100+2*margin
+			maxX: $ 100+margin
+			maxY: $ 100+margin
 		end
 
 		let content = for elem in elems
@@ -106,7 +106,7 @@ Canva2D: macro(Number width: 100, Number height: 100, ...elems)
 		end
 
 		<svg\s
-			viewBox="$box.minX $box.minY $box.maxX $box.maxY"\s
+			viewBox="$box.minX $box.minY $(box.maxX - box.minX) $(box.maxY - box.minY)"\s
 			xmlns="http\:\//www.w3.org/2000/svg"\s
 			width="$width"\s
 			height="$height"\s
