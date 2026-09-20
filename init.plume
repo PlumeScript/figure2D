@@ -13,57 +13,59 @@ let margin = 10
 
 Vect2D: $Vect2D
 Canva2D: macro(Number width: 100, Number height: 100, ...elems)
-	<svg\s
-		viewBox="$(-margin) $(-margin) $(100+2*margin) $(100+2*margin)"\s
-		xmlns="http\:\//www.w3.org/2000/svg"
-		width="$width"\s
-		height="$height"\s
-	>
-		if len(elems)>0
-			let minX = $ Math.huge
-			let maxX = $ Math.huge * -1
-			let minY = $ Math.huge
-			let maxY = $ Math.huge * -1
+	if len(elems)>0
+		let minX = $ Math.huge
+		let maxX = $ Math.huge * -1
+		let minY = $ Math.huge
+		let maxY = $ Math.huge * -1
 
-			for elem in elems
-				set minX = $ min(minX, elem.box.minX)
-				set maxX = $ max(maxX, elem.box.maxX)
-				set minY = $ min(minY, elem.box.minY)
-				set maxY = $ max(maxY, elem.box.maxY)
-			end
-
-			if minX == Math.huge
-				set minX = -10
-			end
-			if minY == Math.huge
-				set minY = -10
-			end
-			if maxX == -Math.huge
-				set maxX = 10
-			end
-			if maxY == -Math.huge
-				set maxY = 10
-			end
-
-			if minX == maxX
-				set minX -= 1
-				set maxX += 1
-			end
-			if minY == maxY
-				set minY -= 1
-				set maxY += 1
-			end
-
-			let scale = $ 1 /  max(maxX - minX, maxY - minY)
-			if scale == 0
-				raise Infinite box
-			end
-
-			for elem in elems
-				$ elem.render((minX+maxX)/2, (minY+maxY)/2, scale)
-			end
-		else
-			$plume.warning(Empty canva.)
+		for elem in elems
+			set minX = $ min(minX, elem.box.minX)
+			set maxX = $ max(maxX, elem.box.maxX)
+			set minY = $ min(minY, elem.box.minY)
+			set maxY = $ max(maxY, elem.box.maxY)
 		end
-	</svg>
+
+		if minX == Math.huge
+			set minX = -10
+		end
+		if minY == Math.huge
+			set minY = -10
+		end
+		if maxX == -Math.huge
+			set maxX = 10
+		end
+		if maxY == -Math.huge
+			set maxY = 10
+		end
+
+		if minX == maxX
+			set minX -= 1
+			set maxX += 1
+		end
+		if minY == maxY
+			set minY -= 1
+			set maxY += 1
+		end
+
+		let scale = $ 1 /  max(maxX - minX, maxY - minY)
+		if scale == 0
+			raise Infinite box
+		end
+		let p = $ min(width, height) / (100 + 2*margin)
+
+		<svg\s
+			viewBox="$(-margin) $(-margin) $(100+2*margin) $(100+2*margin)"\s
+			xmlns="http\:\//www.w3.org/2000/svg"
+			width="$width"\s
+			height="$height"\s
+		>
+			for elem in elems
+				$ elem.render((minX+maxX)/2, (minY+maxY)/2, scale, p)
+			end
+		
+		</svg>
+	else
+		$plume.warning(Empty canva.)
+	end
 end

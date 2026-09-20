@@ -3,11 +3,13 @@
 // Copyright © Erwan Barbedor
 // Licensed under the MIT License — see LICENSE for details.
 
+use #rawNumbers
+
 let Vect2D  from $import(../cls/Vect2D)
 let context = $import(../context)
 
 Shape: macro(render:, definition:, box:)
-	render: macro(cx, cy, scale)
+	render: macro(cx, cy, scale, p)
 		@render
 			style: do
 				stroke: do
@@ -17,16 +19,16 @@ Shape: macro(render:, definition:, box:)
 					vectorEffect: $context.vectorEffect()
 				end
 				font: do
-					fontSize: $context.fontSize()
+					fontSize: calc($context.fontSize() / $p)
 					fontFamily: $context.fontFamily()
 					textAnchor: $context.textAnchor()
 					dominantBaseline: $context.dominantBaseline()
 				end
 				text: do
-					offset: $context.textOffset()
+					offset: $ context.textOffset() / p
 				end
 				dot: do
-					length: $context.dotLength()
+					length: $ context.dotLength() / p
 				end
 			end
 			for dot in definition

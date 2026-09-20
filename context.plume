@@ -8,10 +8,10 @@ stroke: $Context(black)
 strokeLinecap: $Context(round)
 vectorEffect: $Context(non-scaling-stroke)
 
-fontSize: $Context(2em)
+fontSize: $Context(14px)
 fontFamily: $Context(var(--font-title))
 textAnchor: $Context(middle)
 dominantBaseline: $Context(central)
-textOffset: $Context(25)
+textOffset: $Context(14)
 
-dotLength: $Context(15)
+dotLength: $Context(8)
