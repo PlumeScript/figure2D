@@ -78,16 +78,40 @@ Canva2D: macro(Number width: 100, Number height: 100, ...elems)
 			end
 		end
 
+		let box = do
+			minX: $ -margin
+			minY: $ -margin
+			maxX: $ 100+2*margin
+			maxY: $ 100+2*margin
+		end
+
+		let content = for elem in elems
+			let svg, deco from $ elem.render((minX+maxX)/2, (minY+maxY)/2, scale, style)
+			$svg
+
+			if deco
+				if deco.minX < box.minX
+					set box.minX = $ deco.minX
+				end
+				if deco.minY < box.minY
+					set box.minY = $ deco.minY
+				end
+				if deco.maxX > box.maxX
+					set box.maxX = $ deco.maxX
+				end
+				if deco.maxY > box.maxY
+					set box.maxY = $ deco.maxY
+				end
+			end
+		end
+
 		<svg\s
-			viewBox="$(-margin) $(-margin) $(100+2*margin) $(100+2*margin)"\s
-			xmlns="http\:\//www.w3.org/2000/svg"
+			viewBox="$box.minX $box.minY $box.maxX $box.maxY"\s
+			xmlns="http\:\//www.w3.org/2000/svg"\s
 			width="$width"\s
 			height="$height"\s
 		>
-			for elem in elems
-				$ elem.render((minX+maxX)/2, (minY+maxY)/2, scale, style)
-			end
-		
+			$content
 		</svg>
 	else
 		$plume.warning(Empty canva.)

@@ -8,19 +8,21 @@ use #rawNumbers
 let Vect2D  from $import(../cls/Vect2D)
 let context = $import(../context)
 
-Shape: macro(render:, definition:, box:)
+Shape: macro(render:, definition:, box:, deco:)
 	render: macro(cx, cy, scale, style)
-		@render
-			style: $style
-			for dot in definition
-				let x = $dot.x
-				let y = $dot.y
-				
-				- @Vect2D
-					x: $ 100 * (x - cx) * scale + 50
-					y: $ 100 * (y - cy) * scale + 50
-				end
+		let dots = for dot in definition
+			let x = $dot.x
+			let y = $dot.y
+			
+			- @Vect2D
+				x: $ 100 * (x - cx) * scale + 50
+				y: $ 100 * (y - cy) * scale + 50
 			end
+		end
+
+		svg: $ render(style: style, ...dots)
+		deco: if deco
+			$ deco(style: style, ...dots)
 		end
 	end
 	// (minX, minY, maxX, maxY)

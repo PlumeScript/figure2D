@@ -19,13 +19,17 @@ Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), ?cross, ?deg)
 		set angle *= $ Math.pi / 180
 	end
 
+	macro textOffset(angle, style)
+		$ Vect2D(a: angle, r: style.text.offset)
+	end
+
 	@Shape
 		render: macro(pos, style:)
-			let textOffset = $ Vect2D(a: angle, r: style.text.offset)
+			let _textOffset = $ textOffset(angle, style)
 			@Tag(text)
 				x: $pos.x
 				y: $pos.y
-				transform: translate($textOffset.x, $textOffset.y)
+				transform: translate($_textOffset.x, $_textOffset.y)
 				...style.font
 				- $label
 			end
@@ -45,6 +49,14 @@ Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), ?cross, ?deg)
 					L $bl.x $bl.y
 				end
 			end
+		end
+		// Magic values
+		deco: macro(pos, style:)
+			set pos += $ textOffset(angle, style)
+			minX: $ pos.x
+			maxX: $ pos.x + len(label) * 20
+			minY: $ pos.y
+			maxY: $ pos.y + 1 * 20
 		end
 		definition: do
 			- $pos
