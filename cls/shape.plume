@@ -6,8 +6,8 @@
 let Vect2D  from $import(../cls/Vect2D)
 let context = $import(../context)
 
-Shape: macro(render:, definition:, box:, center:)
-	render: macro(minX, minY, scale)
+Shape: macro(render:, definition:, box:)
+	render: macro(cx, cy, scale)
 		@render
 			style: do
 				stroke: do
@@ -32,8 +32,8 @@ Shape: macro(render:, definition:, box:, center:)
 				let y = $dot.y
 				
 				- @Vect2D
-					x: $ 100 * (x - minX) * scale + 50
-					y: $ 100 * (y - minY) * scale + 50
+					x: $ 100 * (x - cx) * scale + 50
+					y: $ 100 * (y - cy) * scale + 50
 				end
 			end
 		end

@@ -59,7 +59,7 @@ Canva2D: macro(Number width: 100, Number height: 100, ...elems)
 			end
 
 			for elem in elems
-				$ elem.render(minX, minY, scale)
+				$ elem.render((minX+maxX)/2, (minY+maxY)/2, scale)
 			end
 		else
 			$plume.warning(Empty canva.)

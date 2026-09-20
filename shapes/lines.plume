@@ -16,8 +16,9 @@ Line: macro(Vect2D u, Vect2D v)
 
 	@Shape
 		render: macro(u, v, style:)
-			let ru = $ u + (v-u)*100
-			let rv = $ u - (v-u)*100
+			// Should compute intersection with border
+			let ru = $ u + (v-u).normalize()*2000
+			let rv = $ u - (v-u).normalize()*2000
 			 @SvgPath(...style.stroke)
 				M $ru.x $ru.y\s
 				L $rv.x $rv.y
