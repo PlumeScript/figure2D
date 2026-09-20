@@ -3,9 +3,10 @@
 // Copyright © Erwan Barbedor
 // Licensed under the MIT License — see LICENSE for details.
 
-strokeWidth: $Context(0.2em)
+strokeWidth: $Context(1.5px)
 stroke: $Context(black)
 strokeLinecap: $Context(round)
+vectorEffect: $Context(non-scaling-stroke)
 
 fontSize: $Context(2em)
 fontFamily: $Context(var(--font-title))

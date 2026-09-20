@@ -14,6 +14,7 @@ Shape: macro(render:, definition:, box:)
 					strokeWidth: $context.strokeWidth()
 					stroke: $context.stroke()
 					strokeLinecap: $context.strokeLinecap()
+					vectorEffect: $context.vectorEffect()
 				end
 				font: do
 					fontSize: $context.fontSize()
