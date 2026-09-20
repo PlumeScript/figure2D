@@ -15,3 +15,5 @@ dominantBaseline: $Context(central)
 textOffset: $Context(14)
 
 dotLength: $Context(8)
+
+margin: $Context(10)
