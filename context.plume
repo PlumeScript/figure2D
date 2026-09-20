@@ -10,6 +10,7 @@ strokeLinecap: $Context(round)
 fontSize: $Context(2em)
 fontFamily: $Context(var(--font-title))
 textAnchor: $Context(middle)
-textOffset: $Context(15)
+dominantBaseline: $Context(central)
+textOffset: $Context(25)
 
 dotLength: $Context(15)

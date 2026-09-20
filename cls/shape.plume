@@ -19,6 +19,7 @@ Shape: macro(render:, definition:, box:)
 					fontSize: $context.fontSize()
 					fontFamily: $context.fontFamily()
 					textAnchor: $context.textAnchor()
+					dominantBaseline: $context.dominantBaseline()
 				end
 				text: do
 					offset: $context.textOffset()
