@@ -1,0 +1,7 @@
+let Tag from $import(html)
+
+SvgPath: macro(d, ...attrs)
+	@Tag(Path, $empty, ...attrs)
+		d: $d
+	end
+end

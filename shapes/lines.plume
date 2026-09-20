@@ -3,5 +3,48 @@
 // Copyright © Erwan Barbedor
 // Licensed under the MIT License — see LICENSE for details.
 
-Line: macro()
+use #rawNumbers
+
+let Vect2D  from $import(../cls/Vect2D)
+let Shape   from $import(../cls/shape)
+let SvgPath from $import(../utils)
+
+Line: macro(Vect2D u, Vect2D v)
+	if u == v
+		raise `u` and `v` must be differents.
+	end
+
+	@Shape
+		render: macro(u, v)
+			let ru = $ u + (v-u)*100
+			let rv = $ u - (v-u)*100
+			 @SvgPath(stroke: black, strokeWidth: 0.02em)
+				M $ru.x $ru.y\s
+				L $rv.x $rv.y
+			end
+		end
+		definition: do
+			- $u
+			- $v
+		end
+	end
+end
+
+Segment: macro(Vect2D u, Vect2D v)
+	if u == v
+		raise `u` and `v` must be differents.
+	end
+
+	@Shape
+		render: macro(u, v)
+			 @SvgPath(stroke: black, strokeWidth: 0.02em)
+				M $u.x $u.y\s
+				L $v.x $v.y
+			end
+		end
+		definition: do
+			- $u
+			- $v
+		end
+	end
 end
