@@ -50,13 +50,30 @@ Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), ?cross, ?deg)
 				end
 			end
 		end
-		// Magic values
+		// Label extent box, in 100-box units. textAnchor is middle and
+		// dominantBaseline is central: the text is centered on the offset
+		// position. Font size in units ~ style.text.offset (both are
+		// context values / p). 0.35 = half-width per char (proportional
+		// font, ~0.7em per char with margin), 0.6 = half-height.
 		deco: macro(pos, style:)
-			set pos += $ textOffset(angle, style)
-			minX: $ pos.x - 1 * 20
-			maxX: $ pos.x + len(label) * 20
-			minY: $ pos.y - 1 * 20
-			maxY: $ pos.y + 3 * 20
+			let off = $ textOffset(angle, style)
+			let w = $ 0.35 * style.text.offset * len(label)
+			let h = $ 0.6 * style.text.offset
+			let minX = $ pos.x + off.x - w
+			let maxX = $ pos.x + off.x + w
+			let minY = $ pos.y + off.y - h
+			let maxY = $ pos.y + off.y + h
+			if cross
+				let d = $ style.dot.length / 2
+				set minX = $ min(minX, pos.x - d)
+				set maxX = $ max(maxX, pos.x + d)
+				set minY = $ min(minY, pos.y - d)
+				set maxY = $ max(maxY, pos.y + d)
+			end
+			minX: $minX
+			maxX: $maxX
+			minY: $minY
+			maxY: $maxY
 		end
 		definition: do
 			- $pos
