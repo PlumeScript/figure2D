@@ -1,0 +1,47 @@
+// This file is part of figure2D
+
+// Copyright © Erwan Barbedor
+// Licensed under the MIT License — see LICENSE for details.
+
+use #rawNumbers
+
+let Tag from $import(html)
+let Vect2D  from $import(../cls/Vect2D)
+let Shape   from $import(../cls/shape)
+let SvgPath from $import(../utils)
+
+Dot: macro(Vect2D pos, String label:, ?cross)
+	if not label and not cross
+		raise Empty dot
+	end
+
+	@Shape
+		render: macro(pos, style:)
+			@Tag(text)
+				x: $pos.x
+				y: $(pos.y - style.text.offset)
+				...style.font
+				- $label
+			end
+
+			if cross
+				let d = $ style.dot.length/2
+
+				let tl = $ pos + Vect2D(-d, -d)
+				let tr = $ pos + Vect2D(d, -d)
+				let bl = $ pos + Vect2D(-d, d)
+				let br = $ pos + Vect2D(d, d)
+
+				@SvgPath(...style.stroke)
+					M $tl.x $tl.y
+					L $br.x $br.y
+					M $tr.x $tr.y
+					L $bl.x $bl.y
+				end
+			end
+		end
+		definition: do
+			- $pos
+		end
+	end
+end

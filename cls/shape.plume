@@ -11,9 +11,20 @@ Shape: macro(render:, definition:, box:, center:)
 		@render
 			style: do
 				stroke: do
-					strokeWidth: calc($context.strokeWidth() * $scale)
+					strokeWidth: $context.strokeWidth()
 					stroke: $context.stroke()
 					strokeLinecap: $context.strokeLinecap()
+				end
+				font: do
+					fontSize: $context.fontSize()
+					fontFamily: $context.fontFamily()
+					textAnchor: $context.textAnchor()
+				end
+				text: do
+					offset: $context.textOffset()
+				end
+				dot: do
+					length: $context.dotLength()
 				end
 			end
 			for dot in definition
