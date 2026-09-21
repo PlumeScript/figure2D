@@ -9,13 +9,14 @@ let Vect2D  from $import(../cls/Vect2D)
 let Shape   from $import(../cls/shape)
 let SvgPath from $import(../utils)
 
-Circle: macro(Vect2D center, Vect2D dot, fill:)
+Circle: macro(Vect2D center, Vect2D dot, fill:, style:)
 	if center == dot
 		raise `center` and `dot` must be differents.
 	end
 	let r = $ center.distance(dot)
 
 	@Shape
+		style: $style
 		render: macro(center, dot, style:)
 			let r = $ center.distance(dot)
 			let dotp = $ 2 * center - dot

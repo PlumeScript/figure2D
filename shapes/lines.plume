@@ -9,12 +9,13 @@ let Vect2D  from $import(../cls/Vect2D)
 let Shape   from $import(../cls/shape)
 let SvgPath from $import(../utils)
 
-Line: macro(Vect2D u, Vect2D v)
+Line: macro(Vect2D u, Vect2D v, style:)
 	if u == v
 		raise `u` and `v` must be differents.
 	end
 
 	@Shape
+		style: $style
 		render: macro(u, v, style:)
 			// Should compute intersection with border
 			let ru = $ u + (v-u).normalize()*2000
@@ -31,12 +32,13 @@ Line: macro(Vect2D u, Vect2D v)
 	end
 end
 
-HalfLine: macro(Vect2D u, Vect2D v)
+HalfLine: macro(Vect2D u, Vect2D v, style:)
 	if u == v
 		raise `u` and `v` must be differents.
 	end
 
 	@Shape
+		style: $style
 		render: macro(u, v, style:)
 			// Should compute intersection with border
 			let rv = $ u + (v-u).normalize()*2000
@@ -52,12 +54,13 @@ HalfLine: macro(Vect2D u, Vect2D v)
 	end
 end
 
-Segment: macro(Vect2D u, Vect2D v)
+Segment: macro(Vect2D u, Vect2D v, style:)
 	if u == v
 		raise `u` and `v` must be differents.
 	end
 
 	@Shape
+		style: $style
 		render: macro(u, v, style:)
 			 @SvgPath(...style.stroke)
 				M $u.x $u.y\s

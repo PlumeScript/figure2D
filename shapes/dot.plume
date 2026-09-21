@@ -10,7 +10,7 @@ let Vect2D  from $import(../cls/Vect2D)
 let Shape   from $import(../cls/shape)
 let SvgPath from $import(../utils)
 
-Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), ?cross, ?deg)
+Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), style:, ?cross, ?deg)
 	if not label and not cross
 		raise Empty dot
 	end
@@ -24,6 +24,7 @@ Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), ?cross, ?deg)
 	end
 
 	@Shape
+		style: $style
 		render: macro(pos, style:)
 			let _textOffset = $ textOffset(angle, style)
 			@Tag(text)

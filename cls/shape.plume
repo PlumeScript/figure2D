@@ -8,8 +8,17 @@ use #rawNumbers
 let Vect2D  from $import(../cls/Vect2D)
 let context = $import(../context)
 
-Shape: macro(render:, definition:, box:, deco:)
-	render: macro(cx, cy, scale, style)
+Shape: macro(render:, definition:, box:, deco:, style:)
+	render: macro(cx, cy, scale, gstyle)
+		let rstyle = $Table()
+		for k, v in items(gstyle)
+			set rstyle[k] = do
+				...v
+				if style and style[k]?
+					...style[k]
+				end
+			end
+		end
 		let dots = for dot in definition
 			let x = $dot.x
 			let y = $dot.y
@@ -20,9 +29,9 @@ Shape: macro(render:, definition:, box:, deco:)
 			end
 		end
 
-		svg: $ render(style: style, ...dots)
+		svg: $ render(style: rstyle, ...dots)
 		deco: if deco
-			$ deco(style: style, ...dots)
+			$ deco(style: rstyle, ...dots)
 		end
 	end
 	// (minX, minY, maxX, maxY)
