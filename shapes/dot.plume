@@ -10,13 +10,15 @@ let Vect2D  from $import(../cls/Vect2D)
 let Shape   from $import(../cls/shape)
 let SvgPath from $import(../utils)
 
-Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), style:, ?cross, ?deg)
+Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), Number direction: 0, style:, ?cross, ?deg)
 	if not label and not cross
 		raise Empty dot
 	end
 
 	if deg
 		set angle *= $ Math.pi / 180
+	else
+		set direction /= $ Math.pi / 180
 	end
 
 	macro textOffset(angle, style)
@@ -30,7 +32,9 @@ Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), style:, ?cros
 			@Tag(text)
 				x: $pos.x
 				y: $pos.y
-				transform: translate($_textOffset.x, $_textOffset.y)
+				transform: do
+					rotate($direction 50 50) translate($_textOffset.x, $_textOffset.y)
+				end
 				...style.font
 				- $label
 			end
