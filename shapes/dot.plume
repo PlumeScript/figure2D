@@ -30,8 +30,9 @@ Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), Number direct
 		render: macro(pos, style:)
 			let _textOffset = $ textOffset(angle, style)
 			@Tag(text)
-				x: $pos.x
-				y: $pos.y
+				// BUG: .format shoudln't be needed with rawNumbers
+				x: $pos.x.format(%f)
+				y: $pos.y.format(%f)
 				transform: do
 					rotate($direction 50 50) translate($_textOffset.x, $_textOffset.y)
 				end
