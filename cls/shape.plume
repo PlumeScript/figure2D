@@ -56,3 +56,51 @@ Shape: macro(render:, definition:, box:, deco:, style:)
 		maxY: $maxY
 	end
 end
+
+ShapeCollection: macro(box:, ...shapes)
+	render: macro(cx, cy, scale, gstyle)
+		let fullSvg, fullDeco
+		for shape in shapes
+			let svg, deco from $ shape.render(cx, cy, scale, gstyle)
+			set fullSvg = $fullSvg$svg
+			
+			if deco
+				if fullDeco
+					set fullDeco = do
+						minX: $ min(deco.minX, fullDeco.minX)
+						maxX: $ max(deco.maxX, fullDeco.maxX)
+						minY: $ min(deco.minY, fullDeco.minY)
+						maxY: $ max(deco.maxY, fullDeco.maxY)
+					end
+				else
+					set fullDeco = $ deco
+				end
+			end
+		end
+
+		svg: $fullSvg
+		deco: $fullDeco
+	end
+	
+	box: if box
+		...box
+	else
+		let minX = $ Math.huge
+		let maxX = $ Math.huge * -1
+		let minY = $ Math.huge
+		let maxY = $ Math.huge * -1
+
+		for shape in shapes
+			let box = $shape.box
+			set minX = $ min(minX, box.minX)
+			set maxX = $ max(maxX, box.maxX)
+			set minY = $ min(minY, box.minY)
+			set maxY = $ max(maxY, box.maxY)
+		end
+
+		minX: $minX
+		minY: $minY
+		maxX: $maxX	
+		maxY: $maxY
+	end
+end
