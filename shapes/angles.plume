@@ -1,0 +1,108 @@
+// This file is part of figure2D
+
+// Copyright © Erwan Barbedor
+// Licensed under the MIT License — see LICENSE for details.
+
+use #rawNumbers
+
+let Vect2D  from $import(../cls/Vect2D)
+let Shape, ShapeCollection from $import(../cls/shape)
+let SvgPath from $import(../utils)
+let HalfLine from $import(./lines)
+let Dot from $import(./dot)
+ref AngleSector: macro(Vect2D A, Vect2D B, Vect2D C, fill:)
+	if A == B
+		raise `A` and `B` must be differents.
+	end
+	if C == B
+		raise `C` and `B` must be differents.
+	end
+
+	
+
+	@Shape
+		render: macro(A, B, C, style:)
+			let radius = $ style.dot.length*2
+
+			let An = $ B + (A-B).normalize() * radius
+			let Cn = $ B + (C-B).normalize() * radius
+
+			@SvgPath(...(style.stroke? or Table()))
+				fill: $ fill or "#0000"
+				- do
+					M $An.x $An.y\s
+					A $radius $radius 0 0 1 $Cn.x $Cn.y\s
+					L $B.x $B.y\s
+					Z
+				end
+			end
+		end
+		definition: do
+			- $A
+			- $B
+			- $C
+		end
+	end
+end
+
+ref RightAngleSector: macro(Vect2D A, Vect2D B, Vect2D C, fill:)
+	if A == B
+		raise `A` and `B` must be differents.
+	end
+	if C == B
+		raise `C` and `B` must be differents.
+	end
+
+	@Shape
+		render: macro(A, B, C, style:)
+			let radius = $ style.dot.length*2
+
+			let An = $ B + (A-B).normalize() * radius
+			let Cn = $ B + (C-B).normalize() * radius
+			let D = $ Cn + (An-B)
+
+			@SvgPath(...(style.stroke? or Table()))
+				fill: $ fill or "#0000"
+				- do
+					M $An.x $An.y\s
+					L $D.x $D.y\s
+					L $Cn.x $Cn.y\s
+					L $B.x $B.y\s
+					Z
+				end
+			end
+		end
+		definition: do
+			- $A
+			- $B
+			- $C
+		end
+	end
+end
+
+Angle: macro(Vect2D A, Vect2D B, Vect2D C, fill:, ?nosector, ?noline, ?noright)
+	if A == B
+		raise `A` and `B` must be differents.
+	end
+	if C == B
+		raise `C` and `B` must be differents.
+	end
+
+	if nosector and noline
+		raise Cannot use both `nosector` and `noline` flags.
+	end
+
+	@ShapeCollection
+		if not noline
+			- $ HalfLine(B, A)
+			- $ HalfLine(B, C)
+		end
+		if not nosector
+			if ((C-B) * (A-B))^2 > 10^-10 or noright
+				- $ AngleSector(A, B, C, fill: fill)
+			else
+				- $ RightAngleSector(A, B, C, fill: fill)
+			end
+		end
+	end
+end
