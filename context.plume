@@ -18,5 +18,5 @@ dotLength: $Context(8)
 
 margin: $Context(10)
 
-tickMarkAngle: $Context($(Math.pi/6))
+tickMarkAngle: $Context($(Math.pi/12))
 tickMarkGap: $Context(4)
