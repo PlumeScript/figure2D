@@ -55,7 +55,7 @@ ref RightAngleSector: macro(Vect2D A, Vect2D B, Vect2D C, fill:)
 
 	@Shape
 		render: macro(A, B, C, style:)
-			let radius = $ style.dot.length*2
+			let radius = $ style.dot.length*1
 
 			let An = $ B + (A-B).normalize() * radius
 			let Cn = $ B + (C-B).normalize() * radius
