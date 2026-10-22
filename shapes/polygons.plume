@@ -1,0 +1,38 @@
+// This file is part of figure2D
+
+// Copyright © Erwan Barbedor
+// Licensed under the MIT License — see LICENSE for details.
+
+use #rawNumbers
+
+let Vect2D  from $import(../cls/Vect2D)
+let Shape   from $import(../cls/shape)
+let SvgPath from $import(../utils)
+
+ref Polygon: macro(fill:#0000, ...dots)
+	@Shape
+		render: macro(style:, ...dots)
+			@SvgPath(fill: $fill, ...(style.stroke? or Table()))
+				M $dots[1].x $dots[1].y\s
+				for i in seq(2, len(dots))
+					L $dots[i].x $dots[i].y\s
+				end
+				Z
+			end
+		end
+
+		definition: $dots
+	end
+end
+
+PolygonByAngles: macro(scale, origin: (0, 0), rotation: 0, fill:, ...angles)
+	let dots = $Table()
+	set dots[1] = $Vect2D(...origin)
+	let angleTotal = $rotation
+
+	for angle in angles
+		set angleTotal += $angle
+		run $ Table.append(dots, dots[1] + Vect2D(r: scale, a: angleTotal))
+	end
+	$ Polygon(fill: fill, ...dots)
+end
