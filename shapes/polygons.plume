@@ -6,26 +6,75 @@
 use #rawNumbers
 
 let Vect2D  from $import(../cls/Vect2D)
-let Shape   from $import(../cls/shape)
+let Shape, ShapeCollection from $import(../cls/shape)
 let SvgPath from $import(../utils)
+let SegmentTickMark from  $import(./decoration)
 
-ref Polygon: macro(fill:#0000, ...dots)
-	@Shape
-		render: macro(style:, ...dots)
-			@SvgPath(fill: $fill, ...(style.stroke? or Table()))
-				M $dots[1].x $dots[1].y\s
-				for i in seq(2, len(dots))
-					L $dots[i].x $dots[i].y\s
+let tickMarkPool = do
+	- (line, 1)
+	- (line, 2)
+	- (line, 3)
+	- (circle, 1)
+	- (circle, 2)
+end
+let lastTickMarkPoolPosition = 1
+
+ref Polygon: macro(fill:#0000, ?autoTick, ...dots)
+	@ShapeCollection
+		- @Shape
+			render: macro(style:, ...dots)
+				@SvgPath(fill: $fill, ...(style.stroke? or Table()))
+					M $dots[1].x $dots[1].y\s
+					for i in seq(2, len(dots))
+						L $dots[i].x $dots[i].y\s
+					end
+					Z
 				end
-				Z
+			end
+
+			definition: $dots
+		end
+		if autoTick
+			// pseudo randomization
+			let offset = $ lastTickMarkPoolPosition
+			if offset >= 5
+				set offset = 1
+			end
+			set lastTickMarkPoolPosition += $ (1 + 2*len(dots))
+
+			let lengths = $Table()
+
+			for i in seq(2, len(dots)+1)
+				let A = $ dots[i]? or dots[1]
+				let B = $ dots[i-1]
+				let key = l$((A-B).norm()*10000).floor()
+				if not lengths[key]?
+					set lengths[key] = $Table()
+				end
+				run $ Table.append(lengths[key], (A, B))
+				// run $ print(key)
+			end
+
+
+			let marksCount = 0
+			for _, length in items(lengths)
+				if len(length) > 1
+					set marksCount += 1
+					let shape, n = if marksCount <= 5
+						$tickMarkPool[(lastTickMarkPoolPosition + offset * marksCount) % 5 + 1]
+					else
+						$Table(line, $(marksCount-2))
+					end
+					for A, B in length
+						- $ SegmentTickMark(A, B, n: n, shape: shape)
+					end
+				end
 			end
 		end
-
-		definition: $dots
 	end
 end
 
-PolygonByAngles: macro(scale, origin: (0, 0), rotation: 0, fill:, ...angles)
+PolygonByAngles: macro(scale, origin: (0, 0), rotation: 0, fill:, ?autoTick, ...angles)
 	let dots = $Table()
 	set dots[1] = $Vect2D(...origin)
 	let angleTotal = $rotation
@@ -34,5 +83,5 @@ PolygonByAngles: macro(scale, origin: (0, 0), rotation: 0, fill:, ...angles)
 		set angleTotal += $angle
 		run $ Table.append(dots, dots[1] + Vect2D(r: scale, a: angleTotal))
 	end
-	$ Polygon(fill: fill, ...dots)
+	$ Polygon(fill: fill, autoTick: autoTick, ...dots)
 end
