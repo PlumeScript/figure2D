@@ -15,7 +15,6 @@ let tickMarkPool = do
 	- (line, 2)
 	- (line, 3)
 	- (circle, 1)
-	- (circle, 2)
 end
 let lastTickMarkPoolPosition = 1
 
@@ -36,10 +35,6 @@ ref Polygon: macro(fill:#0000, ?autoTick, ...dots)
 		end
 		if autoTick
 			// pseudo randomization
-			let offset = $ lastTickMarkPoolPosition
-			if offset >= 5
-				set offset = 1
-			end
 			set lastTickMarkPoolPosition += $ (1 + 2*len(dots))
 
 			let lengths = $Table()
@@ -60,10 +55,10 @@ ref Polygon: macro(fill:#0000, ?autoTick, ...dots)
 			for _, length in items(lengths)
 				if len(length) > 1
 					set marksCount += 1
-					let shape, n = if marksCount <= 5
-						$tickMarkPool[(lastTickMarkPoolPosition + offset * marksCount) % 5 + 1]
+					let shape, n = if marksCount <= 4
+						$tickMarkPool[(lastTickMarkPoolPosition + marksCount) % 4 + 1]
 					else
-						$Table(line, $(marksCount-2))
+						$Table(line, $(marksCount-1))
 					end
 					for A, B in length
 						- $ SegmentTickMark(A, B, n: n, shape: shape)
