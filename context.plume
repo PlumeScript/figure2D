@@ -17,3 +17,6 @@ textOffset: $Context(14)
 dotLength: $Context(8)
 
 margin: $Context(10)
+
+tickMarkAngle: $Context($(Math.pi/6))
+tickMarkGap: $Context(4)

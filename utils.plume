@@ -1,7 +1,21 @@
+use #rawNumbers
+
 let Tag from $import(html)
+let Vect2D  from $import(./cls/Vect2D)
 
 SvgPath: macro(d, ...attrs)
 	@Tag(Path, $empty, ...attrs)
 		d: $d
+	end
+end
+
+SvgCircle: macro(Vect2D center: (0, 0), Number radius: 1, stroke: #000, fill: #0000, ...attrs)
+	@Tag(circle, $empty, ...attrs)
+		// BUG: .format shoudln't be needed with rawNumbers
+		cx: $center.x.format(%f)
+		cy: $center.y.format(%f)
+		r: $radius.format(%f)
+		fill: $fill
+		stroke: $stroke
 	end
 end

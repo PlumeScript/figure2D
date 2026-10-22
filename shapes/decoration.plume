@@ -1,0 +1,50 @@
+// This file is part of figure2D
+
+// Copyright © Erwan Barbedor
+// Licensed under the MIT License — see LICENSE for details.
+
+use #rawNumbers
+
+let Tag from $import(html)
+let Vect2D  from $import(../cls/Vect2D)
+let Shape   from $import(../cls/shape)
+let SvgPath, SvgCircle from $import(../utils)
+
+SegmentTickMark: macro(Vect2D A, Vect2D B, Number n: 2, shape: line)
+	if shape != "line" and shape != "circle"
+		raise `shape` must be "line" or "circle".
+	end
+
+	@Shape
+		render: macro(A, B, style:)
+			let center = $ (A+B)/2
+			let direction = $ (B-A).normalize()
+			let offset = $ direction.normal().rotate(style.decoration.tickMarkAngle).normalize() * style.dot.length/2
+			let radius = $ style.dot.length / 2
+
+			macro getPos(i, offset: 0)
+				$ center + (style.decoration.tickMarkGap+ offset) * (i-(n+1)/2).floor() * direction
+			end
+			
+			if shape == "line"
+				@SvgPath(fill: #0000, ...(style.stroke? or Table()))
+					for i in seq(n)
+						let pos = $ getPos(i)
+						let A = $ pos-offset
+						let B = $ pos+offset
+						M $A.x $A.y\s
+						L $B.x $B.y
+					end
+				end
+			elseif shape == "circle"
+				for i in seq(n)
+					@SvgCircle(fill: #0000, ...(style.stroke? or Table()))
+						center: $ getPos(i, offset: radius/2)
+						radius: $radius
+					end
+				end
+			end
+		end
+		definition: $Table($A, $B)
+	end
+end

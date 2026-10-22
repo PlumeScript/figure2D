@@ -76,6 +76,10 @@ Canva2D: macro(Number width: 100, Number height: 100, ...elems)
 			dot: do
 				length: $ context.dotLength() / p
 			end
+			decoration: do
+				tickMarkAngle: $ context.tickMarkAngle()
+				tickMarkGap: $ context.tickMarkGap() / p
+			end
 		end
 
 		let box = do
