@@ -7,7 +7,7 @@ use #rawNumbers
 
 let Vect2D  from $import(../cls/Vect2D)
 let Shape   from $import(../cls/shape)
-let SvgPath from $import(../utils)
+let SvgPath from $import(../svg)
 
 Circle: macro(Vect2D center, Vect2D dot, fill:, style:)
 	if center == dot

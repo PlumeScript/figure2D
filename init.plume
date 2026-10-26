@@ -10,9 +10,11 @@ let Vect2D  from $import(./cls/Vect2D)
 for file in os.Path("./shapes").getChildren()
 	...file.import()
 end
+for file in os.Path("./cls").getChildren()
+	...file.import()
+end
 let context = $import(./context)
 
-Vect2D: $Vect2D
 Canva2D: macro(Number width: 100, Number height: 100, ...elems)
 	let margin = $context.margin()
 

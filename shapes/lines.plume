@@ -7,7 +7,7 @@ use #rawNumbers
 
 let Vect2D  from $import(../cls/Vect2D)
 let Shape   from $import(../cls/shape)
-let SvgPath from $import(../utils)
+let SvgPath from $import(../svg)
 
 Line: macro(Vect2D u, Vect2D v, style:)
 	if u == v

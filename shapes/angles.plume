@@ -7,7 +7,7 @@ use #rawNumbers
 
 let Vect2D  from $import(../cls/Vect2D)
 let Shape, ShapeCollection from $import(../cls/shape)
-let SvgPath from $import(../utils)
+let SvgPath from $import(../svg)
 let HalfLine from $import(./lines)
 let Dot from $import(./dot)
 ref AngleSector: macro(Vect2D A, Vect2D B, Vect2D C, fill:)

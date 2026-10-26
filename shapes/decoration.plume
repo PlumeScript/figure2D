@@ -8,7 +8,7 @@ use #rawNumbers
 let Tag from $import(html)
 let Vect2D  from $import(../cls/Vect2D)
 let Shape   from $import(../cls/shape)
-let SvgPath, SvgCircle from $import(../utils)
+let SvgPath, SvgCircle from $import(../svg)
 
 SegmentTickMark: macro(Vect2D A, Vect2D B, Number n: 2, shape: line)
 	if shape != "line" and shape != "circle"

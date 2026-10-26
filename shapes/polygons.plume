@@ -7,7 +7,7 @@ use #rawNumbers
 
 let Vect2D  from $import(../cls/Vect2D)
 let Shape, ShapeCollection from $import(../cls/shape)
-let SvgPath from $import(../utils)
+let SvgPath from $import(../svg)
 let SegmentTickMark from  $import(./decoration)
 
 let tickMarkPool = do

@@ -7,14 +7,7 @@ macro getType(x)
 	$ type(x) == "table" and x.type? or type(x)
 end
 
-ref precision: $ 10^-10
-
-macro clamp(x)
-	if (x>0 and x<precision) or (x<0 and x>-precision)
-		return 0
-	end
-	return $x
-end
+let clamp from $import(../utils)
 
 ref Vect2D: do
 	meta call: macro(...args)
