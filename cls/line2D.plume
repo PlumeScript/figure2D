@@ -1,0 +1,60 @@
+// This file is part of figure2D
+
+// Copyright © Erwan Barbedor
+// Licensed under the MIT License — see LICENSE for details.
+
+use #rawNumbers
+
+let clamp from $import(../utils)
+let Vect2D  from $import(../cls/Vect2D)
+
+Line2D: macro(Vect2D origin, Vect2D direction)
+	if direction.norm() == 0
+		raise `direction`'s cannot be null
+	end
+
+	type: Line2D
+	origin: $origin
+	direction: $direction
+
+	contains: macro (Vect2D x)
+		$ (x - self.origin) % self.direction == 0
+	end
+
+	intersect: macro(x)
+		let t = $ type(x) == "table" and x.type or type(x)
+		if t == "Line2D"
+			if x.direction % self.direction == 0
+				if self.contains(x.origin)
+					return infinity
+				else
+					return $Table()
+				end
+			else
+				let d = $ self.direction % x.direction
+				let t = $ (x.origin - self.origin) % x.direction
+				return $ Table(self.origin + self.direction * t)
+			end
+		elseif t == "Circle2D"
+			let w   = $ self.origin - x.center
+			let a   = $ self.direction * self.direction
+			let b   = $ 2 * (w * self.direction)
+			let c   = $ w * w - x.radius^2
+			let dsc = $ b * b - 4 * a * c
+			if dsc < 0
+				return $Table()
+			elseif clamp(dsc) == 0
+				let t = $ -b / (2 * a)
+				return $ Table(self.origin + self.direction * t)
+			else
+				let sq = $ dsc^0.5
+				return do
+					- $ self.origin + self.direction * ((-b - sq) / (2 * a))
+					- $ self.origin + self.direction * ((-b + sq) / (2 * a))
+				end
+			end
+		else
+			raise Cannot intersect a `Line2D` and a `$t`.
+		end
+	end
+end

@@ -1,0 +1,54 @@
+// This file is part of figure2D
+
+// Copyright © Erwan Barbedor
+// Licensed under the MIT License — see LICENSE for details.
+
+use #rawNumbers
+
+let clamp from $import(../utils)
+let Vect2D  from $import(../cls/Vect2D)
+
+Circle2D: macro(Vect2D center, Number radius)
+	if radius <= 0
+		raise radius must be positive
+	end
+
+	type: Circle2D
+	center: $center
+	radius: $radius
+
+	contains: macro (Vect2D x)
+		$ (x - center).norm() < 10^-5
+	end
+
+	intersect: macro(x)
+		let t = $ type(x) == "table" and x.type or type(x)
+		if t == "Line2D"
+			return $ x.intersect(self)
+		elseif t == "Circle2D"
+			if (x.center - self.center).norm() > x.radius + self.radius or (x.center - self.center).norm()^2 <(x.radius - self.radius)^2
+				return $Table()
+			elseif  (x.center - self.center).norm() == 0
+				if x.radius == self.radius
+					return infinity
+				else
+					return $Table()
+				end
+			else
+				let c = $ x.center - self.center
+				let d = $ c.norm()
+				let a = $ (self.radius^2 - x.radius^2 + d^2) / (2 * d)
+				let u = $ c / d
+				let m = $ self.center + u * a
+				let h2 = $ self.radius^2 - a^2
+				if h2 <= 0                        // tangents (avec tolérance clamp si besoin)
+					return $ Table(m)
+				end
+				let h = $ h2^0.5
+				return $ Table(m + u.normal() * h, m - u.normal() * h)
+			end
+		else
+			raise Cannot intersect a `Circle2D` and a `$t`.
+		end
+	end
+end
