@@ -34,7 +34,7 @@ Dot: macro(Vect2D pos, String label:, Number angle: $(-Math.pi/2), Number direct
 				x: $pos.x.format(%f)
 				y: $pos.y.format(%f)
 				transform: do
-					rotate($direction 50 50) translate($_textOffset.x, $_textOffset.y)
+					rotate($direction $(pos.x + _textOffset.x) $(pos.y + _textOffset.y)) translate($_textOffset.x, $_textOffset.y)
 				end
 				...style.font
 				- $label
